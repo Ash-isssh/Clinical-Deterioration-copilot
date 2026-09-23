@@ -1,0 +1,81 @@
+patient_id,age,gender,admission_diagnosis
+1,23,M,Post-op monitoring
+2,65,M,CHF
+3,59,F,Post-op monitoring
+4,60,M,COPD exacerbation
+5,18,F,Pneumonia
+6,41,F,Pneumonia
+7,34,M,COPD exacerbation
+8,36,F,Sepsis
+9,58,M,Pneumonia
+10,45,F,Post-op monitoring
+11,52,F,COPD exacerbation
+12,73,M,Pneumonia
+13,63,M,Sepsis
+14,46,F,Post-op monitoring
+15,43,F,COPD exacerbation
+16,92,M,Sepsis
+17,24,M,CHF
+18,69,M,Pneumonia
+19,77,F,Pneumonia
+20,84,M,Post-op monitoring
+21,78,M,Pneumonia
+22,19,M,CHF
+23,29,M,COPD exacerbation
+24,84,F,CHF
+25,92,F,CHF
+26,20,F,Post-op monitoring
+27,64,F,COPD exacerbation
+28,29,F,Pneumonia
+29,33,F,Sepsis
+30,42,F,CHF
+31,22,M,Pneumonia
+32,84,M,Post-op monitoring
+33,59,M,CHF
+34,34,M,Pneumonia
+35,63,F,CHF
+36,30,F,COPD exacerbation
+37,39,M,Post-op monitoring
+38,91,M,CHF
+39,30,F,COPD exacerbation
+40,29,M,Post-op monitoring
+41,50,M,Pneumonia
+42,36,F,CHF
+43,74,M,COPD exacerbation
+44,70,F,Pneumonia
+45,75,M,CHF
+46,28,F,COPD exacerbation
+47,26,F,CHF
+48,41,F,Sepsis
+49,37,F,COPD exacerbation
+50,28,M,Pneumonia
+51,28,M,Sepsis
+52,57,M,CHF
+53,82,M,Post-op monitoring
+54,61,F,COPD exacerbation
+55,72,F,COPD exacerbation
+56,47,M,Sepsis
+57,65,F,Post-op monitoring
+58,55,M,Pneumonia
+59,28,M,Sepsis
+60,23,F,COPD exacerbation
+61,81,M,Sepsis
+62,62,M,Post-op monitoring
+63,81,M,COPD exacerbation
+64,42,M,COPD exacerbation
+65,62,F,CHF
+66,28,F,COPD exacerbation
+67,18,M,COPD exacerbation
+68,51,F,Sepsis
+69,68,M,Post-op monitoring
+70,46,M,Post-op monitoring
+71,43,M,Post-op monitoring
+72,76,M,Post-op monitoring
+73,58,F,Post-op monitoring
+74,37,F,Sepsis
+75,94,F,Pneumonia
+76,30,M,COPD exacerbation
+77,37,F,Pneumonia
+78,53,F,CHF
+79,24,F,CHF
+80,87,M,Pneumonia
