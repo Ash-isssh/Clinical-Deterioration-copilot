@@ -2,17 +2,24 @@
 Evolving per-patient record: static context (age, history, meds, recent labs)
 loaded once, plus incrementally updated vitals history and derived features.
 """
-from dataclasses import dataclass, field
+from collections import deque
+#using deque for efficient append and pop operations on the vitals history
 
-
-@dataclass
 class PatientState:
-    patient_id: str
-    static_context: dict = field(default_factory=dict)   # loaded once from data/patient_profiles/
-    vitals_history: list = field(default_factory=list)     # rolling window of readings
-    current_score: float | None = None
-    last_alert_at: float | None = None                     # for alert suppression
+    def __init__(self,patient_id: int,age: int,gender: str,admission_diagnosis: str,max_history: int = 20):
+        self.patient_id = patient_id
+        self.age = age
+        self.gender = gender
+        self.admission_diagnosis = admission_diagnosis
 
-    def update(self, reading: dict) -> None:
-        # TODO: append reading, trim to rolling window size, recompute derived features
-        self.vitals_history.append(reading)
+        # Store only the most recent observations
+        self.vitals = deque(maxlen=max_history)
+
+    def add_vital(self, vital: dict):
+        self.vitals.append(vital)
+
+    def get_recent_vitals(self):
+        return list(self.vitals)
+
+    def number_of_vitals(self):
+        return len(self.vitals)
