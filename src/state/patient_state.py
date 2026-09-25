@@ -23,3 +23,6 @@ class PatientState:
 
     def number_of_vitals(self):
         return len(self.vitals)
+
+    def get_vital_series(self, vital_name: str):
+        return [vital[vital_name] for vital in self.vitals if vital_name in vital]
