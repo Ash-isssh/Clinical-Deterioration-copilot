@@ -22,6 +22,6 @@ def send_vitals():
         }
         response = requests.post(API_URL, json=payload)
         print(f"Sent vitals for patient {row['patient_id']}, response: {response.status_code}")
-        time.sleep(2)  # Simulate a delay between readings
+        time.sleep(1)  # Simulate a delay between readings
 if __name__ == "__main__":
     send_vitals()

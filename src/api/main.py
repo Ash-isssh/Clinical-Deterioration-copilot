@@ -8,6 +8,8 @@ from datetime import datetime
 from pydantic import BaseModel
 from src.state.patient_state import PatientState
 import pandas as pd
+from src.detection.trend_detection import detect_trends
+from src.detection.deterioration_detecter import detect_deterioration
 
 app = FastAPI(title="Clinical Deterioration Copilot")
 DEMOGRAPHICS_FILE = "data/patient_profiles/patient_demographics.csv"
@@ -55,6 +57,12 @@ def receive_vitals(observation: Vital):
     state = patient_states[patient_id]
     vital_data = observation.model_dump()
     state.add_vital(vital_data)
+    recent_vitals = state.get_recent_vitals()
+    trends = detect_trends(recent_vitals)
+    deterioration_result = detect_deterioration(trends)
+
+    print("Trends:", trends)
+    print("Deterioration Result:", deterioration_result)
 
     print(
         f"Patient {observation.patient_id}: "
@@ -63,8 +71,10 @@ def receive_vitals(observation: Vital):
 
     return {
         "status": "received",
-        "patient_id": observation.patient_id,
-        "observations_stored": state.number_of_vitals()
+        "patient_id": patient_id,
+        "observations_stored": state.number_of_vitals(),
+        "trends": trends,
+        "deterioration": deterioration_result
     }
 
 @app.get("/patients/{patient_id}/state")
