@@ -15,6 +15,11 @@ class PatientState:
         # Store only the most recent observations
         self.vitals = deque(maxlen=max_history)
 
+        self.trends=None
+        self.deterioration=None
+        self.risk=None
+        self.escalation=None
+
     def add_vital(self, vital: dict):
         self.vitals.append(vital)
 
@@ -26,3 +31,22 @@ class PatientState:
 
     def get_vital_series(self, vital_name: str):
         return [vital[vital_name] for vital in self.vitals if vital_name in vital]
+
+    def update_analysis(
+    self,
+    trends=None,
+    deterioration=None,
+    risk=None,
+    escalation=None,
+):
+        if trends is not None:
+            self.trends = trends
+
+        if deterioration is not None:
+            self.deterioration = deterioration
+
+        if risk is not None:
+            self.risk = risk
+
+        if escalation is not None:
+            self.escalation = escalation
