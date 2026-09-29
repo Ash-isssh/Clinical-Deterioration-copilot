@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clinical Deterioration Copilot</title>
+  <style>
+    body { margin:0; font-family: Arial, sans-serif; background:#f4f6f8; color:#18212b; }
+    header { background:#17324d; color:white; padding:18px 24px; }
+    header h1 { margin:0 0 4px; font-size:24px; }
+    header p { margin:0; opacity:.8; font-size:13px; }
+    main { padding:20px; max-width:1250px; margin:auto; }
+    .toolbar { display:flex; gap:10px; align-items:center; margin-bottom:16px; }
+    button { border:1px solid #c3cad1; background:white; border-radius:6px; padding:9px 12px; cursor:pointer; }
+    .grid { display:grid; grid-template-columns: repeat(auto-fill,minmax(290px,1fr)); gap:14px; }
+    .card { background:white; border:1px solid #d9dee4; border-radius:10px; padding:15px; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+    .card.alert { border-left:5px solid #a63b3b; }
+    .top { display:flex; justify-content:space-between; gap:10px; }
+    .badge { border-radius:999px; padding:4px 8px; font-size:11px; font-weight:bold; background:#e6ebef; }
+    .badge.emergency, .badge.high { background:#f4d7d7; color:#8d2222; }
+    .badge.urgent { background:#f5e4c5; color:#7a5208; }
+    .badge.watch, .badge.medium { background:#e9e2c5; color:#6f5b0d; }
+    .value { font-size:26px; font-weight:bold; }
+    .muted { color:#66727e; font-size:12px; }
+    .row { display:flex; justify-content:space-between; margin:7px 0; font-size:13px; }
+    .actions { display:flex; gap:6px; margin-top:12px; flex-wrap:wrap; }
+    .log { margin-top:20px; background:#18212b; color:#dfe7ef; padding:12px; border-radius:8px; font-family:monospace; font-size:12px; max-height:180px; overflow:auto; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Clinical Deterioration & Escalation Copilot</h1>
+  <p>Synthetic demo • deterministic risk guardrails • local guideline retrieval • clinician in the loop</p>
+</header>
+<main>
+  <div class="toolbar">
+    <button onclick="resetDemo()">Reset demo</button>
+    <button onclick="refresh()">Refresh cohort</button>
+    <span class="muted" id="connection">Connecting…</span>
+  </div>
+  <div id="patients" class="grid"></div>
+  <div class="log" id="log"></div>
+</main>
+<script>
+async function refresh() {
+  const res = await fetch('/patients');
+  const data = await res.json();
+  render(data.patients || []);
+}
+function render(rows) {
+  const el = document.getElementById('patients');
+  if (!rows.length) {
+    el.innerHTML = '<div class="card"><b>No live patients yet.</b><div class="muted">Start the streamer to populate the dashboard.</div></div>';
+    return;
+  }
+  el.innerHTML = rows.map(p => `
+    <div class="card ${p.should_alert ? 'alert' : ''}">
+      <div class="top"><div><b>Patient ${p.patient_id}</b><div class="muted">${p.age} y • ${p.diagnosis}</div></div>
+      <span class="badge ${String(p.priority).toLowerCase()}">${p.priority}</span></div>
+      <div class="row"><span>Risk</span><span><b>${p.risk_level}</b></span></div>
+      <div class="row"><span>NEWS2-derived score</span><span class="value">${p.news2}</span></div>
+      <div class="row"><span>Action</span><span>${p.action}</span></div>
+      <div class="row"><span>Observations</span><span>${p.observations}</span></div>
+      ${p.alert_suppressed ? '<div class="muted">Repeated alert suppressed.</div>' : ''}
+      <div class="actions">
+        <button onclick="decision(${p.patient_id},'accept')">Accept</button>
+        <button onclick="decision(${p.patient_id},'dismiss')">Dismiss</button>
+        <button onclick="decision(${p.patient_id},'defer')">Defer</button>
+        <button onclick="decision(${p.patient_id},'investigate')">Investigate</button>
+      </div>
+    </div>`).join('');
+}
+async function decision(id, action) {
+  const note = action === 'investigate' ? 'Opened patient state from demo dashboard.' : '';
+  await fetch(`/patients/${id}/decision`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action, note})});
+  await refresh();
+}
+async function resetDemo() {
+  await fetch('/demo/reset', {method:'POST'});
+  await refresh();
+}
+function log(message) {
+  const el = document.getElementById('log');
+  const line = document.createElement('div');
+  line.textContent = new Date().toLocaleTimeString() + '  ' + message;
+  el.prepend(line);
+}
+const ws = new WebSocket(`ws://${location.host}/ws`);
+ws.onopen = () => { document.getElementById('connection').textContent = 'Live feed connected'; };
+ws.onclose = () => { document.getElementById('connection').textContent = 'Live feed disconnected'; };
+ws.onmessage = e => {
+  const msg = JSON.parse(e.data);
+  if (msg.type === 'vital_processed') {
+    const d = msg.data;
+    const ecl = d.escalation || {};
+    log(`Patient ${d.patient_id}: NEWS2 ${d.news2?.total ?? '-'} • ${ecl.action ?? '-'}${ecl.alert_suppressed ? ' • duplicate suppressed' : ''}`);
+    refresh();
+  } else if (msg.type === 'clinician_decision') {
+    log(`Clinician action: patient ${msg.data.patient_id} • ${msg.data.payload.action}`);
+    refresh();
+  } else if (msg.type === 'demo_reset') { log('Demo reset'); }
+};
+refresh();
+</script>
+</body>
+</html>

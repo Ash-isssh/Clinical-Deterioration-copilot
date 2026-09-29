@@ -1,91 +1,31 @@
+# Scoring and escalation flow
+
+```text
 PatientState / latest vital
-             │
-             ▼
-        NEWS2 Engine
-             │
-      ┌──────┼──────┐
-      ▼      ▼      ▼
-      RR    SpO2    SBP
-      │      │       │
-      ├──────┼───────┤
-      ▼      ▼       ▼
-    Pulse  Conscious Temp
-             │
-             ▼
-       component scores
-             │
-             ▼
-        NEWS2 TOTAL
-             │
-             ▼
-      response trigger
-             │
-             ▼
-     Risk Ranking + Jev
+        |
+        +--> available-parameter NEWS2-derived score
+        |
+        +--> trend + deterioration evidence
+        |
+        v
+   risk_context
+        |
+        v
+ controlled escalation policy
+        |
+   +----+------------------------+
+   |    |                        |
+ low/watch       NEWS2 5-6      NEWS2 7+
+   |             urgent         emergency guardrail
+   |                |                 |
+   +----------------+-----------------+
+                    |
+            strong trajectory?
+                    |
+                 optional Jev
+                    |
+             evidence-grounded
+                explanation
+```
 
-
-
-## NEXT COMPONENT — risk_ranking.py
-
-Now we combine two independent signals:
-
-                    Current patient
-                         │
-             ┌───────────┴───────────┐
-             ▼                       ▼
-         NEWS2 result          Team 1 result
-             │                       │
-             │                deterioration
-             │                   trends
-             ▼                       ▼
-             └───────────┬───────────┘
-                         ▼
-                  Risk Ranking
-                         │
-                         ▼
-                       Jev
-
-## jev
- build_risk_context()     : total information from risk ranking file
-              │
-              ▼
-        jev_decision.py
-              │
-       ┌──────┼────────┐
-       ▼      ▼        ▼
-     Choice  Noul     Score
-       │      │        │
-       └──────┼────────┘
-              ▼
-        Jev result
-              │
-              ▼
-    deterministic guardrails
-
-
-example:
-
-                         risk_context
-                              │
-                              ▼
-                       escalation.py
-                              │
-               ┌──────────────┼──────────────┐
-               │              │              │
-             0–4            5–6             7+
-               │              │              │
-            FAST PATH      URGENT         JEV PATH
-               │              │              │
-            No Jev          No Jev          Jev
-            No LLM          No LLM           │
-               │              │        ┌─────┴─────┐
-               │              │        ▼           ▼
-               │              │    confirms     doesn't
-               │              │    concern      confirm
-               │              │        │           │
-               │              │        ▼           ▼
-               │              │       LLM        STILL
-               │              │       + RAG     EMERGENCY
-               └──────────────┴──────────┬────────┘
-                                         ▼
-                                  final decision
+The final implementation is deterministic by default. The optional Jev and Anthropic integrations are only enabled when their environment keys are provided.

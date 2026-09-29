@@ -1,0 +1,20 @@
+[
+  {
+    "name": "NICE CG50 - Acutely ill adults in hospital",
+    "url": "https://www.nice.org.uk/guidance/cg50/chapter/recommendations",
+    "bundled_file": "NICE_CG50.pdf",
+    "topics": ["acute deterioration", "physiological monitoring", "clinical concern", "escalation"]
+  },
+  {
+    "name": "NICE CG187 - Acute heart failure: diagnosis and management",
+    "url": "https://www.nice.org.uk/guidance/cg187",
+    "bundled_file": "NICE_CG187.pdf",
+    "topics": ["heart failure", "cardiac assessment", "renal function", "electrolytes", "blood pressure"]
+  },
+  {
+    "name": "NICE NG253 - Suspected sepsis in people aged 16 or over",
+    "url": "https://www.nice.org.uk/guidance/ng253",
+    "bundled_file": null,
+    "topics": ["sepsis", "infection", "deterioration", "risk assessment", "escalation"]
+  }
+]

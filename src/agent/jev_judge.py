@@ -1,9 +1,5 @@
-"""
-Wraps TypeSafe's Jev model for a structured trajectory judgment.
-Runs fully offline (heuristic fallback) if TYPESAFE_API_KEY isn't set or
-the typesafe_sdk package isn't installed, so this module works without
-any external account.
-"""
+"""Optional structured trajectory judge with a deterministic offline fallback."""
+
 import os
 
 TYPESAFE_AVAILABLE = bool(os.getenv("TYPESAFE_API_KEY"))
@@ -11,92 +7,36 @@ TYPESAFE_AVAILABLE = bool(os.getenv("TYPESAFE_API_KEY"))
 if TYPESAFE_AVAILABLE:
     try:
         from typesafe_sdk import Choice, Noul, Score, TypeSafeClient
-    except ImportError:
+    except ImportError:  # pragma: no cover - optional integration
         TYPESAFE_AVAILABLE = False
 
-JEV_MODEL = "jev-latest"
+JEV_MODEL = os.getenv("JEV_MODEL", "jev-latest")
 
 
 def _offline_judgment(risk_context: dict) -> dict:
-    """
-    Offline stand-in for Jev.
+    trajectory = risk_context.get("trajectory", {})
+    news2 = risk_context.get("news2", {})
+    score = news2.get("total", 0)
+    count = trajectory.get("parameter_count", 0)
+    deteriorating = trajectory.get("deteriorating")
 
-    Uses the same input structure as the real Jev call.
-    """
-
-    trajectory = risk_context.get(
-        "trajectory",
-        {}
-    )
-
-    news2 = risk_context.get(
-        "news2",
-        {}
-    )
-
-    news2_score = news2.get(
-        "total",
-        0
-    )
-
-    parameter_count = trajectory.get(
-        "parameter_count",
-        0
-    )
-
-    deteriorating = trajectory.get(
-        "deteriorating",
-        False
-    )
-
-    if deteriorating and parameter_count >= 3:
-        posture = "emergency_review"
-        sev_score = 3
-        probability = 0.85
-
-    elif news2_score >= 7:
-        posture = "emergency_review"
-        sev_score = 3
-        probability = 0.75
-
-    elif deteriorating or parameter_count >= 2:
-        posture = "urgent_review"
-        sev_score = 2
-        probability = 0.65
-
-    elif parameter_count >= 1:
-        posture = "increased_monitoring"
-        sev_score = 1
-        probability = 0.40
-
+    if score >= 7 or (deteriorating and count >= 4):
+        posture, severity, probability = "emergency_review", 3, 0.90
+    elif deteriorating and count >= 3:
+        posture, severity, probability = "emergency_review", 3, 0.85
+    elif score >= 5 or count >= 2:
+        posture, severity, probability = "urgent_review", 2, 0.70
+    elif score >= 1 or count >= 1:
+        posture, severity, probability = "increased_monitoring", 1, 0.40
     else:
-        posture = "routine"
-        sev_score = 0
-        probability = 0.10
+        posture, severity, probability = "routine", 0, 0.10
 
     return {
         "model": "offline-heuristic",
-
-        "needs_additional_escalation": {
-            "probability": probability,
-        },
-
-        "trajectory_severity": {
-            "score": sev_score,
-            "confidence": 0.5,
-            "probabilities": None,
-        },
-
-        "recommended_response": {
-            "choice": posture,
-            "confidence": 0.5,
-            "probabilities": None,
-        },
-
-        "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-        },
+        "needs_additional_escalation": {"probability": probability},
+        "trajectory_severity": {"score": severity, "confidence": 0.80, "probabilities": None},
+        "recommended_response": {"choice": posture, "confidence": 0.80, "probabilities": None},
+        "usage": {"input_tokens": 0, "output_tokens": 0},
     }
 
 
@@ -107,60 +47,50 @@ def ask_jev(risk_context: dict) -> dict:
     questions = {
         "needs_additional_escalation": Noul(
             instructions=(
-                "Given the complete patient state, NEWS2 result, and recent "
-                "trajectory, is there evidence that the patient warrants "
-                "escalation beyond the deterministic NEWS2 response already identified?"
-            ),
+                "Review the supplied deterministic evidence. Decide whether the "
+                "recent trajectory warrants additional escalation beyond the current response."
+            )
         ),
         "trajectory_severity": Score(
             instructions=(
-                "How concerning is the patient's recent trajectory, considering "
-                "the direction and magnitude of changes across multiple vital signs?"
+                "Rate how concerning the recent multi-parameter trajectory is."
             ),
             criteria=[
-                "Stable or no meaningful concerning trajectory.",
-                "Mildly concerning trajectory.",
-                "Clearly concerning trajectory.",
-                "Strongly concerning trajectory requiring close attention.",
+                "Stable or not concerning",
+                "Mildly concerning",
+                "Clearly concerning",
+                "Strongly concerning",
             ],
         ),
         "recommended_response": Choice(
-            instructions=(
-                "Given the patient state, NEWS2 response, and trajectory, which "
-                "response posture best fits the evidence? Do not override explicit "
-                "NEWS2 emergency or urgent response thresholds."
-            ),
+            instructions="Choose a response posture without overriding deterministic emergency guardrails.",
             criteria={
-                "routine": "Continue routine monitoring; no meaningful additional concern.",
-                "increased_monitoring": "Increase monitoring frequency without urgent escalation.",
-                "urgent_review": "Prompt clinical review is warranted.",
-                "emergency_review": "Immediate/emergency clinical response appears warranted.",
+                "routine": "Continue routine monitoring.",
+                "increased_monitoring": "Increase monitoring frequency.",
+                "urgent_review": "Prompt clinical review.",
+                "emergency_review": "Immediate/emergency clinical response.",
             },
         ),
     }
 
-    try:
+    try:  # pragma: no cover - external service path
         with TypeSafeClient(model=JEV_MODEL) as client:
             response = client.system_one(state=risk_context, questions=questions)
     except Exception:
         return _offline_judgment(risk_context)
 
-    escalation_answer = response.nouls["needs_additional_escalation"]
-    trajectory_answer = response.scores["trajectory_severity"]
-    response_answer = response.choices["recommended_response"]
-
     return {
         "model": response.model,
-        "needs_additional_escalation": {"probability": escalation_answer.noul},
+        "needs_additional_escalation": {"probability": response.nouls["needs_additional_escalation"].noul},
         "trajectory_severity": {
-            "score": trajectory_answer.score,
-            "confidence": trajectory_answer.confidence,
-            "probabilities": trajectory_answer.probabilities,
+            "score": response.scores["trajectory_severity"].score,
+            "confidence": response.scores["trajectory_severity"].confidence,
+            "probabilities": response.scores["trajectory_severity"].probabilities,
         },
         "recommended_response": {
-            "choice": response_answer.choice,
-            "confidence": response_answer.confidence,
-            "probabilities": response_answer.probabilities,
+            "choice": response.choices["recommended_response"].choice,
+            "confidence": response.choices["recommended_response"].confidence,
+            "probabilities": response.choices["recommended_response"].probabilities,
         },
         "usage": {
             "input_tokens": response.usage.input_tokens,

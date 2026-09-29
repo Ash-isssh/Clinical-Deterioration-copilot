@@ -1,81 +1,81 @@
-patient_id,age,gender,admission_diagnosis
-1,23,M,Post-op monitoring
-2,65,M,CHF
-3,59,F,Post-op monitoring
-4,60,M,COPD exacerbation
-5,18,F,Pneumonia
-6,41,F,Pneumonia
-7,34,M,COPD exacerbation
-8,36,F,Sepsis
-9,58,M,Pneumonia
-10,45,F,Post-op monitoring
-11,52,F,COPD exacerbation
-12,73,M,Pneumonia
-13,63,M,Sepsis
-14,46,F,Post-op monitoring
-15,43,F,COPD exacerbation
-16,92,M,Sepsis
-17,24,M,CHF
-18,69,M,Pneumonia
-19,77,F,Pneumonia
-20,84,M,Post-op monitoring
-21,78,M,Pneumonia
-22,19,M,CHF
-23,29,M,COPD exacerbation
-24,84,F,CHF
-25,92,F,CHF
-26,20,F,Post-op monitoring
-27,64,F,COPD exacerbation
-28,29,F,Pneumonia
-29,33,F,Sepsis
-30,42,F,CHF
-31,22,M,Pneumonia
-32,84,M,Post-op monitoring
-33,59,M,CHF
-34,34,M,Pneumonia
-35,63,F,CHF
-36,30,F,COPD exacerbation
-37,39,M,Post-op monitoring
-38,91,M,CHF
-39,30,F,COPD exacerbation
-40,29,M,Post-op monitoring
-41,50,M,Pneumonia
-42,36,F,CHF
-43,74,M,COPD exacerbation
-44,70,F,Pneumonia
-45,75,M,CHF
-46,28,F,COPD exacerbation
-47,26,F,CHF
-48,41,F,Sepsis
-49,37,F,COPD exacerbation
-50,28,M,Pneumonia
-51,28,M,Sepsis
-52,57,M,CHF
-53,82,M,Post-op monitoring
-54,61,F,COPD exacerbation
-55,72,F,COPD exacerbation
-56,47,M,Sepsis
-57,65,F,Post-op monitoring
-58,55,M,Pneumonia
-59,28,M,Sepsis
-60,23,F,COPD exacerbation
-61,81,M,Sepsis
-62,62,M,Post-op monitoring
-63,81,M,COPD exacerbation
-64,42,M,COPD exacerbation
-65,62,F,CHF
-66,28,F,COPD exacerbation
-67,18,M,COPD exacerbation
-68,51,F,Sepsis
-69,68,M,Post-op monitoring
-70,46,M,Post-op monitoring
-71,43,M,Post-op monitoring
-72,76,M,Post-op monitoring
-73,58,F,Post-op monitoring
-74,37,F,Sepsis
-75,94,F,Pneumonia
-76,30,M,COPD exacerbation
-77,37,F,Pneumonia
-78,53,F,CHF
-79,24,F,CHF
-80,87,M,Pneumonia
+patient_id,age,gender,admission_diagnosis,relevant_history,current_medications,recent_labs,recent_procedures,clinical_notes
+1,23,F,CHF,History of reduced cardiac function,"[""Diuretic"", ""ACE inhibitor""]","{""creatinine"": 1.1, ""sodium"": 134.1}","[""Cardiac assessment""]",Synthetic admission context for a patient admitted with chf.
+2,46,F,CHF,Heart failure with previous fluid overload,"[""Diuretic"", ""ACE inhibitor""]","{""creatinine"": 1.91, ""sodium"": 137.9}","[""Cardiac assessment""]",Synthetic admission context for a patient admitted with chf.
+3,20,M,COPD exacerbation,COPD with previous exacerbations,"[""Bronchodilator"", ""Inhaled corticosteroid""]","{""wbc"": 8.9, ""crp"": 91.8}","[""Respiratory assessment""]",Synthetic admission context for a patient admitted with copd exacerbation.
+4,74,M,Post-op monitoring,Recent orthopedic procedure,"[""Analgesic"", ""Antibiotic prophylaxis""]","{""hemoglobin"": 13.6, ""creatinine"": 1.13}","[""Post-operative monitoring""]",Synthetic admission context for a patient admitted with post-op monitoring.
+5,47,F,Sepsis,Recent hospital admission for infection,"[""Antibiotic therapy"", ""IV fluids""]","{""wbc"": 14.6, ""lactate"": 2.9}","[""Blood cultures""]",Synthetic admission context for a patient admitted with sepsis.
+6,68,F,Sepsis,Recent infection; hypertension,"[""Antibiotic therapy"", ""IV fluids""]","{""wbc"": 19.0, ""lactate"": 3.71}","[""Blood cultures""]",Synthetic admission context for a patient admitted with sepsis.
+7,83,F,COPD exacerbation,Long-standing obstructive lung disease,"[""Bronchodilator"", ""Inhaled corticosteroid""]","{""wbc"": 11.9, ""crp"": 23.3}","[""Respiratory assessment""]",Synthetic admission context for a patient admitted with copd exacerbation.
+8,83,M,Post-op monitoring,Recent orthopedic procedure,"[""Analgesic"", ""Antibiotic prophylaxis""]","{""hemoglobin"": 13.2, ""creatinine"": 1.56}","[""Post-operative monitoring""]",Synthetic admission context for a patient admitted with post-op monitoring.
+9,60,M,Pneumonia,Former smoker; previous respiratory infection,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 17.5, ""crp"": 124.0}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+10,41,F,Pneumonia,History of recurrent lower respiratory infections,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 9.0, ""crp"": 70.2}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+11,43,F,Post-op monitoring,Recent major surgery,"[""Analgesic"", ""Antibiotic prophylaxis""]","{""hemoglobin"": 13.4, ""creatinine"": 1.2}","[""Post-operative monitoring""]",Synthetic admission context for a patient admitted with post-op monitoring.
+12,57,M,CHF,History of reduced cardiac function,"[""Diuretic"", ""ACE inhibitor""]","{""creatinine"": 1.04, ""sodium"": 133.9}","[""Cardiac assessment""]",Synthetic admission context for a patient admitted with chf.
+13,20,M,Pneumonia,History of recurrent lower respiratory infections,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 11.7, ""crp"": 57.1}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+14,54,F,Post-op monitoring,Recent abdominal surgery,"[""Analgesic"", ""Antibiotic prophylaxis""]","{""hemoglobin"": 11.1, ""creatinine"": 1.1}","[""Post-operative monitoring""]",Synthetic admission context for a patient admitted with post-op monitoring.
+15,51,M,Post-op monitoring,Recent abdominal surgery,"[""Analgesic"", ""Antibiotic prophylaxis""]","{""hemoglobin"": 13.3, ""creatinine"": 0.86}","[""Post-operative monitoring""]",Synthetic admission context for a patient admitted with post-op monitoring.
+16,28,M,Pneumonia,Hypertension; previous pneumonia episode,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 17.3, ""crp"": 94.8}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+17,23,F,COPD exacerbation,Chronic COPD; former smoker,"[""Bronchodilator"", ""Inhaled corticosteroid""]","{""wbc"": 15.5, ""crp"": 94.0}","[""Respiratory assessment""]",Synthetic admission context for a patient admitted with copd exacerbation.
+18,85,M,CHF,Heart failure with previous fluid overload,"[""Diuretic"", ""ACE inhibitor""]","{""creatinine"": 0.84, ""sodium"": 138.1}","[""Cardiac assessment""]",Synthetic admission context for a patient admitted with chf.
+19,74,F,Sepsis,Recent hospital admission for infection,"[""Antibiotic therapy"", ""IV fluids""]","{""wbc"": 16.3, ""lactate"": 2.12}","[""Blood cultures""]",Synthetic admission context for a patient admitted with sepsis.
+20,28,M,CHF,History of reduced cardiac function,"[""Diuretic"", ""ACE inhibitor""]","{""creatinine"": 1.12, ""sodium"": 133.2}","[""Cardiac assessment""]",Synthetic admission context for a patient admitted with chf.
+21,91,M,Post-op monitoring,Recent abdominal surgery,"[""Analgesic"", ""Antibiotic prophylaxis""]","{""hemoglobin"": 12.2, ""creatinine"": 1.13}","[""Post-operative monitoring""]",Synthetic admission context for a patient admitted with post-op monitoring.
+22,62,M,Sepsis,Diabetes; recurrent infections,"[""Antibiotic therapy"", ""IV fluids""]","{""wbc"": 21.3, ""lactate"": 1.82}","[""Blood cultures""]",Synthetic admission context for a patient admitted with sepsis.
+23,85,F,Pneumonia,History of recurrent lower respiratory infections,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 11.7, ""crp"": 49.4}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+24,89,M,COPD exacerbation,Long-standing obstructive lung disease,"[""Bronchodilator"", ""Inhaled corticosteroid""]","{""wbc"": 13.6, ""crp"": 83.7}","[""Respiratory assessment""]",Synthetic admission context for a patient admitted with copd exacerbation.
+25,39,M,Sepsis,Recent hospital admission for infection,"[""Antibiotic therapy"", ""IV fluids""]","{""wbc"": 12.3, ""lactate"": 3.99}","[""Blood cultures""]",Synthetic admission context for a patient admitted with sepsis.
+26,89,F,COPD exacerbation,Long-standing obstructive lung disease,"[""Bronchodilator"", ""Inhaled corticosteroid""]","{""wbc"": 15.9, ""crp"": 36.8}","[""Respiratory assessment""]",Synthetic admission context for a patient admitted with copd exacerbation.
+27,55,F,Sepsis,Recent hospital admission for infection,"[""Antibiotic therapy"", ""IV fluids""]","{""wbc"": 14.2, ""lactate"": 2.75}","[""Blood cultures""]",Synthetic admission context for a patient admitted with sepsis.
+28,85,M,Post-op monitoring,Recent orthopedic procedure,"[""Analgesic"", ""Antibiotic prophylaxis""]","{""hemoglobin"": 13.1, ""creatinine"": 1.75}","[""Post-operative monitoring""]",Synthetic admission context for a patient admitted with post-op monitoring.
+29,91,M,CHF,Chronic heart failure; hypertension,"[""Diuretic"", ""ACE inhibitor""]","{""creatinine"": 1.13, ""sodium"": 139.9}","[""Cardiac assessment""]",Synthetic admission context for a patient admitted with chf.
+30,87,F,Post-op monitoring,Recent abdominal surgery,"[""Analgesic"", ""Antibiotic prophylaxis""]","{""hemoglobin"": 9.4, ""creatinine"": 1.47}","[""Post-operative monitoring""]",Synthetic admission context for a patient admitted with post-op monitoring.
+31,74,F,Post-op monitoring,Recent major surgery,"[""Analgesic"", ""Antibiotic prophylaxis""]","{""hemoglobin"": 13.0, ""creatinine"": 1.45}","[""Post-operative monitoring""]",Synthetic admission context for a patient admitted with post-op monitoring.
+32,57,F,Sepsis,Recent hospital admission for infection,"[""Antibiotic therapy"", ""IV fluids""]","{""wbc"": 21.0, ""lactate"": 2.35}","[""Blood cultures""]",Synthetic admission context for a patient admitted with sepsis.
+33,79,M,Sepsis,Recent hospital admission for infection,"[""Antibiotic therapy"", ""IV fluids""]","{""wbc"": 11.7, ""lactate"": 3.76}","[""Blood cultures""]",Synthetic admission context for a patient admitted with sepsis.
+34,40,F,Pneumonia,Former smoker; previous respiratory infection,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 13.0, ""crp"": 67.5}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+35,81,F,Sepsis,Recent hospital admission for infection,"[""Antibiotic therapy"", ""IV fluids""]","{""wbc"": 10.1, ""lactate"": 1.66}","[""Blood cultures""]",Synthetic admission context for a patient admitted with sepsis.
+36,22,M,CHF,Chronic heart failure; hypertension,"[""Diuretic"", ""ACE inhibitor""]","{""creatinine"": 1.42, ""sodium"": 138.4}","[""Cardiac assessment""]",Synthetic admission context for a patient admitted with chf.
+37,72,F,Sepsis,Recent infection; hypertension,"[""Antibiotic therapy"", ""IV fluids""]","{""wbc"": 17.2, ""lactate"": 2.43}","[""Blood cultures""]",Synthetic admission context for a patient admitted with sepsis.
+38,80,M,Pneumonia,History of recurrent lower respiratory infections,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 12.7, ""crp"": 149.5}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+39,30,F,CHF,Chronic heart failure; hypertension,"[""Diuretic"", ""ACE inhibitor""]","{""creatinine"": 1.58, ""sodium"": 139.8}","[""Cardiac assessment""]",Synthetic admission context for a patient admitted with chf.
+40,26,M,Sepsis,Recent infection; hypertension,"[""Antibiotic therapy"", ""IV fluids""]","{""wbc"": 11.1, ""lactate"": 1.64}","[""Blood cultures""]",Synthetic admission context for a patient admitted with sepsis.
+41,92,F,COPD exacerbation,COPD with previous exacerbations,"[""Bronchodilator"", ""Inhaled corticosteroid""]","{""wbc"": 12.3, ""crp"": 57.5}","[""Respiratory assessment""]",Synthetic admission context for a patient admitted with copd exacerbation.
+42,55,M,Post-op monitoring,Recent major surgery,"[""Analgesic"", ""Antibiotic prophylaxis""]","{""hemoglobin"": 11.3, ""creatinine"": 1.23}","[""Post-operative monitoring""]",Synthetic admission context for a patient admitted with post-op monitoring.
+43,62,F,Sepsis,Recent hospital admission for infection,"[""Antibiotic therapy"", ""IV fluids""]","{""wbc"": 11.0, ""lactate"": 2.38}","[""Blood cultures""]",Synthetic admission context for a patient admitted with sepsis.
+44,48,M,COPD exacerbation,COPD with previous exacerbations,"[""Bronchodilator"", ""Inhaled corticosteroid""]","{""wbc"": 11.6, ""crp"": 81.3}","[""Respiratory assessment""]",Synthetic admission context for a patient admitted with copd exacerbation.
+45,87,F,Post-op monitoring,Recent orthopedic procedure,"[""Analgesic"", ""Antibiotic prophylaxis""]","{""hemoglobin"": 12.3, ""creatinine"": 1.51}","[""Post-operative monitoring""]",Synthetic admission context for a patient admitted with post-op monitoring.
+46,50,F,Pneumonia,Hypertension; previous pneumonia episode,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 13.7, ""crp"": 36.4}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+47,64,M,Sepsis,Recent hospital admission for infection,"[""Antibiotic therapy"", ""IV fluids""]","{""wbc"": 12.7, ""lactate"": 2.47}","[""Blood cultures""]",Synthetic admission context for a patient admitted with sepsis.
+48,32,M,Pneumonia,History of recurrent lower respiratory infections,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 15.6, ""crp"": 146.0}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+49,88,M,Pneumonia,History of recurrent lower respiratory infections,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 11.2, ""crp"": 74.1}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+50,79,F,Pneumonia,Former smoker; previous respiratory infection,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 15.0, ""crp"": 74.5}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+51,24,F,Sepsis,Recent infection; hypertension,"[""Antibiotic therapy"", ""IV fluids""]","{""wbc"": 15.0, ""lactate"": 3.07}","[""Blood cultures""]",Synthetic admission context for a patient admitted with sepsis.
+52,56,M,CHF,Chronic heart failure; hypertension,"[""Diuretic"", ""ACE inhibitor""]","{""creatinine"": 1.7, ""sodium"": 132.1}","[""Cardiac assessment""]",Synthetic admission context for a patient admitted with chf.
+53,71,M,COPD exacerbation,COPD with previous exacerbations,"[""Bronchodilator"", ""Inhaled corticosteroid""]","{""wbc"": 11.9, ""crp"": 82.8}","[""Respiratory assessment""]",Synthetic admission context for a patient admitted with copd exacerbation.
+54,89,F,Post-op monitoring,Recent abdominal surgery,"[""Analgesic"", ""Antibiotic prophylaxis""]","{""hemoglobin"": 11.7, ""creatinine"": 1.08}","[""Post-operative monitoring""]",Synthetic admission context for a patient admitted with post-op monitoring.
+55,84,M,Sepsis,Recent hospital admission for infection,"[""Antibiotic therapy"", ""IV fluids""]","{""wbc"": 18.9, ""lactate"": 1.77}","[""Blood cultures""]",Synthetic admission context for a patient admitted with sepsis.
+56,18,F,Pneumonia,History of recurrent lower respiratory infections,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 9.8, ""crp"": 110.8}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+57,27,F,Pneumonia,Former smoker; previous respiratory infection,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 16.6, ""crp"": 74.1}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+58,60,F,Post-op monitoring,Recent major surgery,"[""Analgesic"", ""Antibiotic prophylaxis""]","{""hemoglobin"": 10.1, ""creatinine"": 0.77}","[""Post-operative monitoring""]",Synthetic admission context for a patient admitted with post-op monitoring.
+59,91,F,COPD exacerbation,Chronic COPD; former smoker,"[""Bronchodilator"", ""Inhaled corticosteroid""]","{""wbc"": 15.9, ""crp"": 98.9}","[""Respiratory assessment""]",Synthetic admission context for a patient admitted with copd exacerbation.
+60,60,F,CHF,Chronic heart failure; hypertension,"[""Diuretic"", ""ACE inhibitor""]","{""creatinine"": 1.13, ""sodium"": 132.3}","[""Cardiac assessment""]",Synthetic admission context for a patient admitted with chf.
+61,32,M,Post-op monitoring,Recent orthopedic procedure,"[""Analgesic"", ""Antibiotic prophylaxis""]","{""hemoglobin"": 14.0, ""creatinine"": 1.18}","[""Post-operative monitoring""]",Synthetic admission context for a patient admitted with post-op monitoring.
+62,51,F,Pneumonia,Former smoker; previous respiratory infection,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 16.4, ""crp"": 109.2}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+63,57,M,Pneumonia,History of recurrent lower respiratory infections,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 15.4, ""crp"": 37.4}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+64,22,F,Post-op monitoring,Recent major surgery,"[""Analgesic"", ""Antibiotic prophylaxis""]","{""hemoglobin"": 10.5, ""creatinine"": 1.47}","[""Post-operative monitoring""]",Synthetic admission context for a patient admitted with post-op monitoring.
+65,32,M,COPD exacerbation,COPD with previous exacerbations,"[""Bronchodilator"", ""Inhaled corticosteroid""]","{""wbc"": 8.8, ""crp"": 62.3}","[""Respiratory assessment""]",Synthetic admission context for a patient admitted with copd exacerbation.
+66,51,F,CHF,History of reduced cardiac function,"[""Diuretic"", ""ACE inhibitor""]","{""creatinine"": 1.4, ""sodium"": 134.9}","[""Cardiac assessment""]",Synthetic admission context for a patient admitted with chf.
+67,19,M,Post-op monitoring,Recent abdominal surgery,"[""Analgesic"", ""Antibiotic prophylaxis""]","{""hemoglobin"": 13.1, ""creatinine"": 1.18}","[""Post-operative monitoring""]",Synthetic admission context for a patient admitted with post-op monitoring.
+68,71,F,Pneumonia,Former smoker; previous respiratory infection,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 12.8, ""crp"": 89.0}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+69,71,M,Sepsis,Diabetes; recurrent infections,"[""Antibiotic therapy"", ""IV fluids""]","{""wbc"": 17.2, ""lactate"": 1.83}","[""Blood cultures""]",Synthetic admission context for a patient admitted with sepsis.
+70,86,M,Post-op monitoring,Recent orthopedic procedure,"[""Analgesic"", ""Antibiotic prophylaxis""]","{""hemoglobin"": 10.1, ""creatinine"": 1.68}","[""Post-operative monitoring""]",Synthetic admission context for a patient admitted with post-op monitoring.
+71,22,F,Pneumonia,History of recurrent lower respiratory infections,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 12.4, ""crp"": 53.2}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+72,35,F,Post-op monitoring,Recent orthopedic procedure,"[""Analgesic"", ""Antibiotic prophylaxis""]","{""hemoglobin"": 13.2, ""creatinine"": 0.76}","[""Post-operative monitoring""]",Synthetic admission context for a patient admitted with post-op monitoring.
+73,32,F,COPD exacerbation,Long-standing obstructive lung disease,"[""Bronchodilator"", ""Inhaled corticosteroid""]","{""wbc"": 12.1, ""crp"": 76.3}","[""Respiratory assessment""]",Synthetic admission context for a patient admitted with copd exacerbation.
+74,54,M,Pneumonia,Former smoker; previous respiratory infection,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 17.8, ""crp"": 87.0}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+75,48,F,CHF,Chronic heart failure; hypertension,"[""Diuretic"", ""ACE inhibitor""]","{""creatinine"": 1.58, ""sodium"": 135.4}","[""Cardiac assessment""]",Synthetic admission context for a patient admitted with chf.
+76,44,M,Sepsis,Recent hospital admission for infection,"[""Antibiotic therapy"", ""IV fluids""]","{""wbc"": 10.1, ""lactate"": 3.89}","[""Blood cultures""]",Synthetic admission context for a patient admitted with sepsis.
+77,27,M,Pneumonia,Hypertension; previous pneumonia episode,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 15.4, ""crp"": 78.1}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+78,67,F,Pneumonia,Hypertension; previous pneumonia episode,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 14.5, ""crp"": 43.4}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+79,78,F,Pneumonia,History of recurrent lower respiratory infections,"[""Antibiotic therapy"", ""Paracetamol""]","{""wbc"": 17.9, ""crp"": 83.6}","[""Chest imaging""]",Synthetic admission context for a patient admitted with pneumonia.
+80,70,M,Post-op monitoring,Recent orthopedic procedure,"[""Analgesic"", ""Antibiotic prophylaxis""]","{""hemoglobin"": 11.2, ""creatinine"": 1.63}","[""Post-operative monitoring""]",Synthetic admission context for a patient admitted with post-op monitoring.

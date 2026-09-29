@@ -153,16 +153,108 @@ def generate_dataset(num_patients=80, observations_per_patient=200,
     df = pd.DataFrame(all_data)
     
     # Generate demographics
-    demographics = pd.DataFrame({
-        'patient_id': range(1, num_patients + 1),
-        'age': np.random.randint(18, 95, num_patients),
-        'gender': np.random.choice(['M', 'F'], num_patients),
-        'admission_diagnosis': np.random.choice(
-            ['Pneumonia', 'CHF', 'Sepsis', 'COPD exacerbation', 'Post-op monitoring'],
-            num_patients
-        )
-    })
-    
+    # Generate static patient context
+    diagnoses = [
+        'Pneumonia',
+        'CHF',
+        'Sepsis',
+        'COPD exacerbation',
+        'Post-op monitoring'
+    ]
+
+    profiles = []
+
+    for patient_id in range(1, num_patients + 1):
+
+        age = np.random.randint(18, 95)
+        gender = np.random.choice(['M', 'F'])
+        diagnosis = np.random.choice(diagnoses)
+
+        # Synthetic patient history
+        history_templates = {
+            'Pneumonia': [
+                'Former smoker; previous respiratory infection',
+                'History of recurrent lower respiratory infections',
+                'Hypertension; previous pneumonia episode'
+            ],
+            'CHF': [
+                'Chronic heart failure; hypertension',
+                'History of reduced cardiac function',
+                'Heart failure with previous fluid overload'
+            ],
+            'Sepsis': [
+                'Recent infection; hypertension',
+                'Diabetes; recurrent infections',
+                'Recent hospital admission for infection'
+            ],
+            'COPD exacerbation': [
+                'Chronic COPD; former smoker',
+                'Long-standing obstructive lung disease',
+                'COPD with previous exacerbations'
+            ],
+            'Post-op monitoring': [
+                'Recent major surgery',
+                'Recent abdominal surgery',
+                'Recent orthopedic procedure'
+            ]
+        }
+
+        medication_templates = {
+            'Pneumonia': ['Antibiotic therapy', 'Paracetamol'],
+            'CHF': ['Diuretic', 'ACE inhibitor'],
+            'Sepsis': ['Antibiotic therapy', 'IV fluids'],
+            'COPD exacerbation': ['Bronchodilator', 'Inhaled corticosteroid'],
+            'Post-op monitoring': ['Analgesic', 'Antibiotic prophylaxis']
+        }
+
+        procedure_templates = {
+            'Pneumonia': ['Chest imaging'],
+            'CHF': ['Cardiac assessment'],
+            'Sepsis': ['Blood cultures'],
+            'COPD exacerbation': ['Respiratory assessment'],
+            'Post-op monitoring': ['Post-operative monitoring']
+        }
+
+        lab_templates = {
+            'Pneumonia': {
+                'wbc': round(np.random.uniform(9, 18), 1),
+                'crp': round(np.random.uniform(20, 150), 1)
+            },
+            'CHF': {
+                'creatinine': round(np.random.uniform(0.8, 2.0), 2),
+                'sodium': round(np.random.uniform(132, 140), 1)
+            },
+            'Sepsis': {
+                'wbc': round(np.random.uniform(10, 22), 1),
+                'lactate': round(np.random.uniform(1.5, 4.0), 2)
+            },
+            'COPD exacerbation': {
+                'wbc': round(np.random.uniform(8, 16), 1),
+                'crp': round(np.random.uniform(10, 100), 1)
+            },
+            'Post-op monitoring': {
+                'hemoglobin': round(np.random.uniform(9, 14), 1),
+                'creatinine': round(np.random.uniform(0.7, 1.8), 2)
+            }
+        }
+
+        profiles.append({
+            'patient_id': patient_id,
+            'age': age,
+            'gender': gender,
+            'admission_diagnosis': diagnosis,
+            'relevant_history': np.random.choice(history_templates[diagnosis]),
+            'current_medications': json.dumps(medication_templates[diagnosis]),
+            'recent_labs': json.dumps(lab_templates[diagnosis]),
+            'recent_procedures': json.dumps(procedure_templates[diagnosis]),
+            'clinical_notes': (
+                f"Synthetic admission context for a patient admitted with "
+                f"{diagnosis.lower()}."
+            )
+        })
+
+    demographics = pd.DataFrame(profiles)
+
     return df, demographics
 
 # Generate dataset

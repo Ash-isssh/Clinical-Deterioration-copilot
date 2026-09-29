@@ -2,29 +2,24 @@ from src.agent import escalation
 
 
 def make_risk_context(
-    news2_score: int,
-    response_level: str,
-    monitoring: str,
-    reason: str,
-    single_parameter_score_3: bool = False,
-    deteriorating: bool = False,
-    concerning_parameters: list[str] | None = None,
+    news2_score: int = 0,
+    deteriorating=None,
+    concerning_parameters=None,
 ):
+    concerning_parameters = concerning_parameters or []
+
     return {
         "news2": {
+            "status": "available_parameters_only",
             "total": news2_score,
-            "single_parameter_score_3": single_parameter_score_3,
-            "response": {
-                "response_level": response_level,
-                "monitoring": monitoring,
-                "reason": reason,
-            },
+            "component_scores": {},
+            "single_parameter_score_3": False,
         },
 
         "trajectory": {
             "deteriorating": deteriorating,
-            "parameter_count": len(concerning_parameters or []),
-            "concerning_parameters": concerning_parameters or [],
+            "parameter_count": len(concerning_parameters),
+            "concerning_parameters": concerning_parameters,
             "trends": {},
         },
     }
@@ -35,7 +30,7 @@ def fake_jev_confirms(risk_context):
         "model": "fake-jev",
 
         "needs_additional_escalation": {
-            "probability": 0.85
+            "probability": 0.85,
         },
 
         "trajectory_severity": {
@@ -62,7 +57,7 @@ def fake_jev_does_not_confirm(risk_context):
         "model": "fake-jev",
 
         "needs_additional_escalation": {
-            "probability": 0.20
+            "probability": 0.20,
         },
 
         "trajectory_severity": {
@@ -99,16 +94,64 @@ def fake_explanation(
 
 
 # ---------------------------------------------------------
-# NEWS2 2
+# No deterioration
 # ---------------------------------------------------------
 
-def test_news2_two_uses_fast_path():
+def test_no_deterioration_uses_routine_monitoring():
 
     risk_context = make_risk_context(
-        news2_score=2,
-        response_level="increased_monitoring",
-        monitoring="minimum 4-6 hourly",
-        reason="NEWS2 total is between 1 and 4",
+        news2_score=0,
+        deteriorating=False,
+        concerning_parameters=[],
+    )
+
+    result = escalation.decide_escalation(
+        risk_context=risk_context,
+        patient_state={},
+    )
+
+    assert result["should_alert"] is False
+    assert result["action"] == "routine_monitoring"
+    assert result["jev_called"] is False
+    assert result["llm_called"] is False
+
+
+# ---------------------------------------------------------
+# Insufficient data
+# ---------------------------------------------------------
+
+def test_insufficient_data_does_not_escalate():
+
+    risk_context = make_risk_context(
+        news2_score=0,
+        deteriorating=None,
+        concerning_parameters=[],
+    )
+
+    result = escalation.decide_escalation(
+        risk_context=risk_context,
+        patient_state={},
+    )
+
+    assert result["should_alert"] is False
+    assert result["action"] == "insufficient_data"
+    assert result["jev_called"] is False
+    assert result["llm_called"] is False
+
+
+# ---------------------------------------------------------
+# 1-2 concerning parameters
+# ---------------------------------------------------------
+
+def test_limited_deterioration_uses_increased_monitoring():
+
+    risk_context = make_risk_context(
+        news2_score=1,
+        deteriorating=True,
+        concerning_parameters=[
+            "respiratory_rate_increasing",
+            "temperature_increasing",
+        ],
     )
 
     result = escalation.decide_escalation(
@@ -123,60 +166,10 @@ def test_news2_two_uses_fast_path():
 
 
 # ---------------------------------------------------------
-# NEWS2 3 + single parameter score 3
+# 3+ concerning parameters + Jev confirms
 # ---------------------------------------------------------
 
-def test_news2_three_single_parameter_trigger():
-
-    risk_context = make_risk_context(
-        news2_score=3,
-        response_level="single_parameter_trigger",
-        monitoring="minimum 1 hourly",
-        reason="NEWS2 score of 3 in a single parameter",
-        single_parameter_score_3=True,
-    )
-
-    result = escalation.decide_escalation(
-        risk_context=risk_context,
-        patient_state={},
-    )
-
-    assert result["should_alert"] is True
-    assert result["action"] == "single_parameter_trigger"
-    assert result["jev_called"] is False
-    assert result["llm_called"] is False
-
-
-# ---------------------------------------------------------
-# NEWS2 5
-# ---------------------------------------------------------
-
-def test_news2_five_uses_urgent_path():
-
-    risk_context = make_risk_context(
-        news2_score=5,
-        response_level="urgent_response",
-        monitoring="minimum 1 hourly",
-        reason="NEWS2 total is 5 or more",
-    )
-
-    result = escalation.decide_escalation(
-        risk_context=risk_context,
-        patient_state={},
-    )
-
-    assert result["should_alert"] is True
-    assert result["priority"] == "urgent"
-    assert result["action"] == "urgent_response"
-    assert result["jev_called"] is False
-    assert result["llm_called"] is False
-
-
-# ---------------------------------------------------------
-# NEWS2 7 + Jev confirms
-# ---------------------------------------------------------
-
-def test_news2_seven_jev_confirms(monkeypatch):
+def test_strong_deterioration_jev_confirms(monkeypatch):
 
     monkeypatch.setattr(
         escalation,
@@ -191,10 +184,7 @@ def test_news2_seven_jev_confirms(monkeypatch):
     )
 
     risk_context = make_risk_context(
-        news2_score=7,
-        response_level="emergency_response",
-        monitoring="continuous",
-        reason="NEWS2 total is 7 or more",
+        news2_score=3,
         deteriorating=True,
         concerning_parameters=[
             "heart_rate_increasing",
@@ -209,23 +199,21 @@ def test_news2_seven_jev_confirms(monkeypatch):
     )
 
     assert result["should_alert"] is True
-    assert result["priority"] == "emergency"
-    assert result["action"] == "emergency_response"
+    assert result["priority"] == "high"
+    assert result["action"] == "clinical_review"
 
     assert result["jev_called"] is True
     assert result["jev_confirmed"] is True
-    assert result["llm_called"] is True
+    assert result["llm_called"] is False
 
-    assert result["source"] == "news2+jev+llm"
+    assert result["source"] == "jev+rag"
 
 
 # ---------------------------------------------------------
-# NEWS2 7 + Jev does NOT confirm
+# 3+ concerning parameters + Jev does not confirm
 # ---------------------------------------------------------
 
-def test_news2_seven_jev_does_not_downgrade_emergency(
-    monkeypatch,
-):
+def test_strong_deterioration_jev_does_not_confirm(monkeypatch):
 
     monkeypatch.setattr(
         escalation,
@@ -234,10 +222,13 @@ def test_news2_seven_jev_does_not_downgrade_emergency(
     )
 
     risk_context = make_risk_context(
-        news2_score=7,
-        response_level="emergency_response",
-        monitoring="continuous",
-        reason="NEWS2 total is 7 or more",
+        news2_score=3,
+        deteriorating=True,
+        concerning_parameters=[
+            "heart_rate_increasing",
+            "respiratory_rate_increasing",
+            "oxygen_saturation_decreasing",
+        ],
     )
 
     result = escalation.decide_escalation(
@@ -245,15 +236,12 @@ def test_news2_seven_jev_does_not_downgrade_emergency(
         patient_state={},
     )
 
-    # NEWS2 emergency guardrail remains active
-    assert result["should_alert"] is True
-    assert result["priority"] == "emergency"
-    assert result["action"] == "emergency_response"
+    assert result["should_alert"] is False
+    assert result["priority"] == "watch"
+    assert result["action"] == "increased_monitoring"
 
     assert result["jev_called"] is True
     assert result["jev_confirmed"] is False
-
-    # LLM should not be called in this branch
     assert result["llm_called"] is False
 
-    assert result["source"] == "news2_guardrail"
+    assert result["source"] == "jev"
