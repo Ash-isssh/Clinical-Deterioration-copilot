@@ -1,13 +1,10 @@
 fastapi
 uvicorn[standard]
 websockets
-langgraph
-langchain
-langchain-anthropic
-redis
 pandas
 numpy
-ruptures
 pydantic
 python-dotenv
+pypdf
+requests
 pytest
